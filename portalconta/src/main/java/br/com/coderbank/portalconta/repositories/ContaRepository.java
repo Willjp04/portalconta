@@ -9,6 +9,7 @@ import java.util.UUID;
 public interface ContaRepository extends JpaRepository<Conta, UUID> {
 
     Optional <Conta> findByIdCliente(UUID IdCliente);
+    boolean existsByIdCliente(UUID IdCliente);
 
 
 

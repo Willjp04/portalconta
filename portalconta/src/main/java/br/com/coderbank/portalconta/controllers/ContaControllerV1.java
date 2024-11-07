@@ -30,6 +30,9 @@ public class ContaControllerV1 {
 
     @GetMapping("/{idCliente}")
     public ResponseEntity<SaldoResponseDTO> buscaSaldoPorIdCliente(@PathVariable UUID idCliente) {
-        return ResponseEntity.status(HttpStatus.OK).body(contaService.obterSaldoPorIdCliente(idCliente));
-    }
-}
+        if(contaRepository.existsByIdCliente(idCliente) == true)
+            return ResponseEntity.status(HttpStatus.OK).body(contaService.obterSaldoPorIdCliente(idCliente));
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+}}
