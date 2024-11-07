@@ -3,6 +3,7 @@ package br.com.coderbank.portalconta.services;
 
 import br.com.coderbank.portalconta.dtos.requests.ContaFinanceiraRequestDTO;
 import br.com.coderbank.portalconta.dtos.responses.ContaFinanceiraResponseDTO;
+import br.com.coderbank.portalconta.dtos.responses.SaldoResponseDTO;
 import br.com.coderbank.portalconta.entities.Conta;
 import br.com.coderbank.portalconta.repositories.ContaRepository;
 import org.springframework.beans.BeanUtils;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Service
 public class ContaService {
@@ -21,7 +23,9 @@ public class ContaService {
 
         var contaEntity = new Conta();
 
+
        contaEntity.setNumeroAgencia(1);
+
 
         contaEntity.setSaldo(BigDecimal.ZERO);
 
@@ -42,20 +46,21 @@ public class ContaService {
 
 
     }
-
     private Integer geraNumeroConta(){
         var gerador = this.contaRepository.findAll().size();
         return  gerador+1;
-    }
-
-
-
-
-
-
 
 
 
     }
+
+    public SaldoResponseDTO obterSaldoPorIdCliente(UUID idCliente ) {
+        var saldo = contaRepository.findByIdCliente(idCliente).get().getSaldo();
+        return new SaldoResponseDTO(saldo);
+        }
+
+            }
+
+
 
 
