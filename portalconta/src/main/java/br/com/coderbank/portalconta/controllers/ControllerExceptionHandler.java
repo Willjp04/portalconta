@@ -1,6 +1,7 @@
 package br.com.coderbank.portalconta.controllers;
 
 import br.com.coderbank.portalconta.exceptions.ContaJaExisteException;
+import br.com.coderbank.portalconta.exceptions.ContaNaoExisteException;
 import br.com.coderbank.portalconta.responses.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,4 +22,14 @@ public class ControllerExceptionHandler {
         return new ErrorResponseDTO(exceptionMessage, System.currentTimeMillis());
 
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    @ExceptionHandler({ContaNaoExisteException.class})
+    public ErrorResponseDTO conflictConta(final Exception exception) {
+        final var exceptionMessage = exception.getMessage();
+        return new ErrorResponseDTO(exceptionMessage, System.currentTimeMillis());
+    }
+
+
 }

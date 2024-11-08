@@ -5,12 +5,16 @@ import br.com.coderbank.portalconta.dtos.requests.ContaFinanceiraRequestDTO;
 import br.com.coderbank.portalconta.dtos.responses.ContaFinanceiraResponseDTO;
 import br.com.coderbank.portalconta.entities.Conta;
 import br.com.coderbank.portalconta.exceptions.ContaJaExisteException;
+import br.com.coderbank.portalconta.exceptions.ContaNaoExisteException;
 import br.com.coderbank.portalconta.repositories.ContaRepository;
+import br.com.coderbank.portalconta.responses.SaldoResponseDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -46,22 +50,38 @@ public class ContaService {
     }
 
 
-
-    private Integer  gerarNumeroConta() {
+    private Integer gerarNumeroConta() {
         int min = 100000;
         int max = 999999;
         return ThreadLocalRandom.current().nextInt(min, max);
     }
 
-    private void verificarContaDuplicada(ContaFinanceiraRequestDTO contaFinanceiraRequestDTO ) {
+    private void verificarContaDuplicada(ContaFinanceiraRequestDTO contaFinanceiraRequestDTO) {
         final var idCliente = contaFinanceiraRequestDTO.idCliente();
-        if(contaRepository.existsByIdCliente(idCliente)){
-        throw new ContaJaExisteException("Já existe uma conta para o cliente com ID: " + idCliente);
+        if (contaRepository.existsByIdCliente(idCliente)) {
+            throw new ContaJaExisteException("Já existe uma conta para o cliente com ID: " + idCliente);
         }
 
 
     }
 
+
+
+    public SaldoResponseDTO obterSaldoPorIdCliente(UUID idCliente) {
+        Optional<Conta> contaOptional = contaRepository.findByIdCliente(idCliente);
+
+
+        if (contaOptional.isPresent()) {
+            var saldo = contaOptional.get().getSaldo();
+            return new SaldoResponseDTO(saldo);
+        } else {
+
+            throw new ContaNaoExisteException("Não existe uma conta para o cliente ID:" + idCliente) {
+            };
+
+        }
+
+    }
 
 
 }
