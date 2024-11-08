@@ -8,7 +8,7 @@ import java.util.UUID;
 
 
 @Entity
-@Table (name = "CB_CONTA")
+@Table(name = "CB_CONTA")
 public class Conta {
 
     @Id
@@ -16,19 +16,18 @@ public class Conta {
     private UUID idConta;
 
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private UUID idCliente;
 
 
-    @Column(nullable = false, length = 999999)
-    private  Integer numeroAgencia;
+    @Column(nullable = false, length = 1)
+    private Integer numeroAgencia;
 
 
-
-    @Column(unique = true)
+    @Column(unique = true, length = 6)
     private Integer numeroConta;
 
-    @Column()
+    @Column
     private BigDecimal saldo;
 
     public void setNumeroAgencia(Integer numeroAgencia) {
