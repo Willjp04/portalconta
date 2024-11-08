@@ -1,6 +1,7 @@
 package br.com.coderbank.portalconta.controllers;
 
 import br.com.coderbank.portalconta.dtos.requests.ContaFinanceiraRequestDTO;
+import br.com.coderbank.portalconta.dtos.requests.DepositoRequestDTO;
 import br.com.coderbank.portalconta.dtos.responses.ContaFinanceiraResponseDTO;
 import br.com.coderbank.portalconta.dtos.responses.SaldoResponseDTO;
 import br.com.coderbank.portalconta.repositories.ContaRepository;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @RestController
@@ -30,9 +32,26 @@ public class ContaControllerV1 {
 
     @GetMapping("/{idCliente}")
     public ResponseEntity<SaldoResponseDTO> buscaSaldoPorIdCliente(@PathVariable UUID idCliente) {
-        if(contaRepository.existsByIdCliente(idCliente) == true)
+        if(contaRepository.existsByIdCliente(idCliente))
             return ResponseEntity.status(HttpStatus.OK).body(contaService.obterSaldoPorIdCliente(idCliente));
         else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-}}
+
+
+}
+    @PatchMapping("/deposito")
+    public ResponseEntity<SaldoResponseDTO> depositar(@RequestBody DepositoRequestDTO depositoRequestDTO){
+        if(contaRepository.existsById(depositoRequestDTO.idConta())) {
+            ResponseEntity<SaldoResponseDTO> body = ResponseEntity.status(HttpStatus.OK).body(contaService.depositar(depositoRequestDTO));
+            return body;
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+
+
+
+}

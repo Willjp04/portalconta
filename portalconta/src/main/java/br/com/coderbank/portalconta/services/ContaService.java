@@ -2,6 +2,7 @@ package br.com.coderbank.portalconta.services;
 
 
 import br.com.coderbank.portalconta.dtos.requests.ContaFinanceiraRequestDTO;
+import br.com.coderbank.portalconta.dtos.requests.DepositoRequestDTO;
 import br.com.coderbank.portalconta.dtos.responses.ContaFinanceiraResponseDTO;
 import br.com.coderbank.portalconta.dtos.responses.SaldoResponseDTO;
 import br.com.coderbank.portalconta.entities.Conta;
@@ -57,10 +58,24 @@ public class ContaService {
     public SaldoResponseDTO obterSaldoPorIdCliente(UUID idCliente ) {
         var saldo = contaRepository.findByIdCliente(idCliente).get().getSaldo();
         return new SaldoResponseDTO(saldo);
-        }
+    }
+
+    public SaldoResponseDTO depositar(DepositoRequestDTO depositoRequestDTO ) {
+        Conta contaEntity = contaRepository.findById(depositoRequestDTO.idConta()).get();
+        contaEntity.setSaldo(contaEntity.getSaldo().add(depositoRequestDTO.valor()));
+        contaRepository.save(contaEntity);
+        return new SaldoResponseDTO(contaEntity.getSaldo());
 
 
-            }
+
+    }
+
+
+    }
+
+
+
+
 
 
 
