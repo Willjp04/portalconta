@@ -2,6 +2,7 @@ package br.com.coderbank.portalconta.services;
 
 
 import br.com.coderbank.portalconta.dtos.requests.ContaFinanceiraRequestDTO;
+import br.com.coderbank.portalconta.dtos.requests.DepositoRequestDTO;
 import br.com.coderbank.portalconta.dtos.responses.ContaFinanceiraResponseDTO;
 import br.com.coderbank.portalconta.entities.Conta;
 import br.com.coderbank.portalconta.exceptions.ContaJaExisteException;
@@ -66,7 +67,6 @@ public class ContaService {
     }
 
 
-
     public SaldoResponseDTO obterSaldoPorIdCliente(UUID idCliente) {
         Optional<Conta> contaOptional = contaRepository.findByIdCliente(idCliente);
 
@@ -81,7 +81,27 @@ public class ContaService {
 
         }
 
+
     }
+
+    public SaldoResponseDTO depositar(DepositoRequestDTO depositoRequestDTO) {
+        Optional<Conta> contaOptional = contaRepository.findById(depositoRequestDTO.idConta());
+
+        if (contaOptional.isPresent()) {
+            contaOptional.get().setSaldo(contaOptional.get().getSaldo().add(depositoRequestDTO.valor()));
+            var saldo = contaOptional.get().getSaldo();
+            contaRepository.save(contaOptional.get());
+            return new SaldoResponseDTO(saldo);
+
+        } else {
+            throw new ContaNaoExisteException("Conta não encontrada");
+        }
+
+
+    }
+
+
+
 
 
 }
