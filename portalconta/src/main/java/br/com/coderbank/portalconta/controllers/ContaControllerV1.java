@@ -5,6 +5,7 @@ import br.com.coderbank.portalconta.dtos.requests.DepositoRequestDTO;
 import br.com.coderbank.portalconta.dtos.responses.ContaFinanceiraResponseDTO;
 import br.com.coderbank.portalconta.responses.SaldoResponseDTO;
 import br.com.coderbank.portalconta.services.ContaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,8 @@ public class ContaControllerV1 {
         return ResponseEntity.status(HttpStatus.OK).body(contaService.depositar(depositoRequestDTO));
 
     }
+
+
 
 
 

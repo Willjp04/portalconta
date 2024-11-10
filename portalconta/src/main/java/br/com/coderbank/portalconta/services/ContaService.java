@@ -7,6 +7,7 @@ import br.com.coderbank.portalconta.dtos.responses.ContaFinanceiraResponseDTO;
 import br.com.coderbank.portalconta.entities.Conta;
 import br.com.coderbank.portalconta.exceptions.ContaJaExisteException;
 import br.com.coderbank.portalconta.exceptions.ContaNaoExisteException;
+import br.com.coderbank.portalconta.exceptions.ValorDepositoInferiorException;
 import br.com.coderbank.portalconta.repositories.ContaRepository;
 import br.com.coderbank.portalconta.responses.SaldoResponseDTO;
 import org.springframework.beans.BeanUtils;
@@ -86,8 +87,8 @@ public class ContaService {
 
     public SaldoResponseDTO depositar(DepositoRequestDTO depositoRequestDTO) {
         Optional<Conta> contaOptional = contaRepository.findById(depositoRequestDTO.idConta());
-
-        if (contaOptional.isPresent()) {
+            if (contaOptional.isPresent()) {
+                validarValorDepositdo(depositoRequestDTO);
             contaOptional.get().setSaldo(contaOptional.get().getSaldo().add(depositoRequestDTO.valor()));
             var saldo = contaOptional.get().getSaldo();
             contaRepository.save(contaOptional.get());
@@ -96,14 +97,24 @@ public class ContaService {
         } else {
             throw new ContaNaoExisteException("Conta não encontrada");
         }
+    }
 
+
+    private void validarValorDepositdo(DepositoRequestDTO depositoRequestDTO) {
+        final var valor = depositoRequestDTO.valor();
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ValorDepositoInferiorException("Valor não pode ser menor ou igual a zero.");
+        }
 
     }
 
 
-
-
-
 }
+
+
+
+
+
+
 
 
