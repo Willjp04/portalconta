@@ -88,7 +88,7 @@ public class ContaService {
     public SaldoResponseDTO depositar(DepositoRequestDTO depositoRequestDTO) {
         Optional<Conta> contaOptional = contaRepository.findById(depositoRequestDTO.idConta());
             if (contaOptional.isPresent()) {
-                validarValorDepositdo(depositoRequestDTO);
+                validarValorDepositado(depositoRequestDTO);
             contaOptional.get().setSaldo(contaOptional.get().getSaldo().add(depositoRequestDTO.valor()));
             var saldo = contaOptional.get().getSaldo();
             contaRepository.save(contaOptional.get());
@@ -100,7 +100,7 @@ public class ContaService {
     }
 
 
-    private void validarValorDepositdo(DepositoRequestDTO depositoRequestDTO) {
+    private void validarValorDepositado(DepositoRequestDTO depositoRequestDTO) {
         final var valor = depositoRequestDTO.valor();
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValorDepositoInferiorException("Valor não pode ser menor ou igual a zero.");
