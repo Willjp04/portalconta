@@ -8,7 +8,7 @@ import java.util.UUID;
 
 
 @Entity
-@Table(name = "CB_CONTA")
+@Table
 public class Conta {
 
     @Id

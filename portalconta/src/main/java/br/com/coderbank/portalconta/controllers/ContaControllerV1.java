@@ -2,6 +2,7 @@ package br.com.coderbank.portalconta.controllers;
 
 import br.com.coderbank.portalconta.dtos.requests.ContaFinanceiraRequestDTO;
 import br.com.coderbank.portalconta.dtos.requests.DepositoRequestDTO;
+import br.com.coderbank.portalconta.dtos.requests.SaqueRequestDTO;
 import br.com.coderbank.portalconta.dtos.responses.ContaFinanceiraResponseDTO;
 import br.com.coderbank.portalconta.responses.SaldoResponseDTO;
 import br.com.coderbank.portalconta.services.ContaService;
@@ -39,6 +40,11 @@ public class ContaControllerV1 {
     public ResponseEntity<SaldoResponseDTO> depositar(@RequestBody DepositoRequestDTO depositoRequestDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(contaService.depositar(depositoRequestDTO));
 
+    }
+
+    @PatchMapping("/saque")
+    public ResponseEntity<SaldoResponseDTO> sacar(@RequestBody SaqueRequestDTO depositoRequestDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(contaService.sacar(depositoRequestDTO));
     }
 
 

@@ -3,6 +3,7 @@ package br.com.coderbank.portalconta.services;
 
 import br.com.coderbank.portalconta.dtos.requests.ContaFinanceiraRequestDTO;
 import br.com.coderbank.portalconta.dtos.requests.DepositoRequestDTO;
+import br.com.coderbank.portalconta.dtos.requests.SaqueRequestDTO;
 import br.com.coderbank.portalconta.dtos.responses.ContaFinanceiraResponseDTO;
 import br.com.coderbank.portalconta.entities.Conta;
 import br.com.coderbank.portalconta.exceptions.ContaJaExisteException;
@@ -87,16 +88,13 @@ public class ContaService {
 
     public SaldoResponseDTO depositar(DepositoRequestDTO depositoRequestDTO) {
         Optional<Conta> contaOptional = contaRepository.findById(depositoRequestDTO.idConta());
-            if (contaOptional.isPresent()) {
-                validarValorDepositado(depositoRequestDTO);
-            contaOptional.get().setSaldo(contaOptional.get().getSaldo().add(depositoRequestDTO.valor()));
-            var saldo = contaOptional.get().getSaldo();
-            contaRepository.save(contaOptional.get());
-            return new SaldoResponseDTO(saldo);
+        verificarSeContaExiste(depositoRequestDTO.idConta());
+        validarValorDepositado(depositoRequestDTO);
+        contaOptional.get().setSaldo(contaOptional.get().getSaldo().add(depositoRequestDTO.valor()));
+        var saldo = contaOptional.get().getSaldo();
+        contaRepository.save(contaOptional.get());
+        return new SaldoResponseDTO(saldo);
 
-        } else {
-            throw new ContaNaoExisteException("Conta não encontrada");
-        }
     }
 
 
@@ -109,7 +107,48 @@ public class ContaService {
     }
 
 
+    public SaldoResponseDTO sacar(SaqueRequestDTO saqueRequestDTO) {
+        Optional<Conta> contaOptional = contaRepository.findById(saqueRequestDTO.idConta());
+        verificarSeContaExiste(saqueRequestDTO.idConta());
+        validarValorSaque(saqueRequestDTO);
+        contaOptional.get().setSaldo(contaOptional.get().getSaldo().subtract(saqueRequestDTO.valor()));
+        var saldo = contaOptional.get().getSaldo();
+        contaRepository.save(contaOptional.get());
+        return new SaldoResponseDTO(saldo);
+    }
+
+
+    private void validarValorSaque(SaqueRequestDTO saqueRequestDTO) {
+        Optional<Conta> contaOptional = contaRepository.findById(saqueRequestDTO.idConta());
+        final var valor = saqueRequestDTO.valor();
+        var saldo = contaOptional.get().getSaldo();
+
+        if (valor.compareTo(valor) > saldo.compareTo(saqueRequestDTO.valor())) {
+            throw new ValorDepositoInferiorException("Saldo Insuficiente");
+        }
+
+
+    }
+
+
+    public void verificarSeContaExiste(UUID idConta) {
+        Optional<Conta> contaOptional = contaRepository.findById(idConta);
+        if (contaOptional.isEmpty()) {
+            throw new ContaNaoExisteException("Conta não encontrada");
+
+        }
+
+    }
+
+
 }
+
+
+
+
+
+
+
 
 
 

@@ -2,6 +2,7 @@ package br.com.coderbank.portalconta.controllers;
 
 import br.com.coderbank.portalconta.exceptions.ContaJaExisteException;
 import br.com.coderbank.portalconta.exceptions.ContaNaoExisteException;
+import br.com.coderbank.portalconta.exceptions.SaldoInsuficienteException;
 import br.com.coderbank.portalconta.exceptions.ValorDepositoInferiorException;
 import br.com.coderbank.portalconta.responses.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,8 @@ public class ControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
-    @ExceptionHandler({ContaJaExisteException.class,ContaNaoExisteException.class, ValorDepositoInferiorException.class})
+    @ExceptionHandler({ContaJaExisteException.class,ContaNaoExisteException.class, ValorDepositoInferiorException.class,
+            SaldoInsuficienteException.class})
     public ErrorResponseDTO conflict(final Throwable exception) {
 
         final var exceptionMessage = exception.getMessage();
