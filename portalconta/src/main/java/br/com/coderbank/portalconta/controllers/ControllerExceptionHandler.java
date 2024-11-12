@@ -23,7 +23,7 @@ public class ControllerExceptionHandler {
 
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     @ExceptionHandler({ContaNaoExisteException.class})
     public ErrorResponseDTO conflictConta(final Exception exception) {
