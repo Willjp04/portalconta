@@ -19,17 +19,6 @@ public class ContaService {
     @Autowired
     private ContaRepository contaRepository;
 
-    private Conta construirContaEntity(ContaFinanceiraRequestDTO contaFinanceiraRequestDTO) {
-
-        var contaEntity = new Conta();
-        contaEntity.setNumeroAgencia(1);
-        contaEntity.setSaldo(BigDecimal.ZERO);
-        contaEntity.setNumeroConta(gerarNumeroConta());
-        BeanUtils.copyProperties(contaFinanceiraRequestDTO, contaEntity);
-        return contaEntity;
-
-    }
-
     public ContaFinanceiraResponseDTO salvar(final ContaFinanceiraRequestDTO contaFinanceiraRequestDTO) {
 
         var contaEntity = construirContaEntity(contaFinanceiraRequestDTO);
@@ -44,6 +33,20 @@ public class ContaService {
                 contaEntity.getNumeroConta(),
                 contaEntity.getSaldo());
     }
+
+
+    private Conta construirContaEntity(ContaFinanceiraRequestDTO contaFinanceiraRequestDTO) {
+
+        var contaEntity = new Conta();
+        contaEntity.setNumeroAgencia(1);
+        contaEntity.setSaldo(BigDecimal.ZERO);
+        contaEntity.setNumeroConta(gerarNumeroConta());
+        BeanUtils.copyProperties(contaFinanceiraRequestDTO, contaEntity);
+        return contaEntity;
+
+    }
+
+
 
 
 
