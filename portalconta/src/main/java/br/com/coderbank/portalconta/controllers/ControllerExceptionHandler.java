@@ -1,12 +1,14 @@
 package br.com.coderbank.portalconta.controllers;
 
 import br.com.coderbank.portalconta.exceptions.ContaJaExisteException;
-import br.com.coderbank.portalconta.responses.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.net.URI;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -14,11 +16,17 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     @ExceptionHandler({ContaJaExisteException.class})
-    public ErrorResponseDTO conflict(final Throwable exception) {
+    public ProblemDetail conflict(final Throwable exception) {
 
         final var exceptionMessage = exception.getMessage();
 
-        return new ErrorResponseDTO(exceptionMessage, System.currentTimeMillis());
+        var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exceptionMessage);
+
+        problemDetail.setTitle("Conflict");
+        problemDetail.setType(URI.create("https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status"));
+        problemDetail.setDetail(exceptionMessage);
+
+        return problemDetail;
 
     }
 }
