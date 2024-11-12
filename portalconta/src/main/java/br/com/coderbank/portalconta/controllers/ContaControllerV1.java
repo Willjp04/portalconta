@@ -29,7 +29,7 @@ public class ContaControllerV1 {
 
     @GetMapping("/{idCliente}")
     public ResponseEntity<SaldoResponseDTO> buscaSaldoPorIdCliente(@PathVariable UUID idCliente) {
-    return ResponseEntity.status(HttpStatus.OK).body(contaService.obterSaldoPorIdCliente(idCliente));
+    return ResponseEntity.status(HttpStatus.OK).body(contaService.obterSaldoPorCliente(idCliente));
     }
 
 

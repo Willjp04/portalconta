@@ -66,24 +66,20 @@ public class ContaService {
     }
 
 
+    public SaldoResponseDTO obterSaldoPorCliente(UUID idCliente) {
+        Conta conta = obterContaOuLancarExcecao(idCliente);
+        return new SaldoResponseDTO(conta.getSaldo());
+    }
 
-    public SaldoResponseDTO obterSaldoPorIdCliente(UUID idCliente) {
-        Optional<Conta> contaOptional = contaRepository.findByIdCliente(idCliente);
-
-
-        if (contaOptional.isPresent()) {
-            var saldo = contaOptional.get().getSaldo();
-            return new SaldoResponseDTO(saldo);
-        } else {
-
-            throw new ContaNaoExisteException("Não existe uma conta para o cliente ID:" + idCliente) {
-            };
-
-        }
-
+    private Conta obterContaOuLancarExcecao(UUID idCliente) {
+        return contaRepository.findByIdCliente(idCliente)
+                .orElseThrow(() -> new ContaNaoExisteException("Não existe uma conta para o cliente ID: " + idCliente));
     }
 
 
 }
+
+
+
 
 
